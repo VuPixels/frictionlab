@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friction Lab — Experience Audits by Vu</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --off-white: #f5f2ee;
+    --warm-white: #faf8f5;
+    --accent: #e85d2f;
+    --accent-light: #f5896a;
+    --muted: #888077;
+    --border: #e0dbd3;
+    --card-bg: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--black);
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(250, 248, 245, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav a.cta-nav {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--black);
+    text-decoration: none;
+    border: 1.5px solid var(--black);
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    transition: all 0.2s ease;
+  }
+
+  nav a.cta-nav:hover {
+    background: var(--black);
+    color: var(--off-white);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 6.5vw, 6rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.35s forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    max-width: 560px;
+    font-size: 1.1rem;
+    color: #444;
+    font-weight: 300;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.65s forwards;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(232, 93, 47, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(232, 93, 47, 0.4);
+  }
+
+  .btn-secondary {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--black); }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--black);
+    color: var(--off-white);
+    padding: 1rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 22s linear infinite;
+  }
+
+  .marquee-track span {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0 2.5rem;
+  }
+
+  .marquee-track span.dot {
+    color: var(--accent);
+    padding: 0;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    max-width: 700px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* PROBLEM */
+  .problem {
+    background: var(--black);
+    color: var(--off-white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem::before {
+    content: 'FRICTION';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(5rem, 14vw, 14rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .problem h2 { color: var(--off-white); max-width: 750px; }
+  .problem .section-label { color: var(--accent-light); }
+
+  .problem-body {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: rgba(245, 242, 238, 0.75);
+    max-width: 620px;
+    line-height: 1.8;
+  }
+
+  .problem-body strong {
+    color: var(--off-white);
+    font-weight: 500;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    margin-top: 3rem;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    transition: background 0.2s ease;
+  }
+
+  .service-card:hover { background: var(--warm-white); }
+
+  .service-num {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .service-card h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .service-card p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .service-tag {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+  }
+
+  /* PROCESS */
+  .process { background: var(--off-white); }
+
+  .process-steps { margin-top: 3rem; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .step:last-child { border-bottom: 1px solid var(--border); }
+
+  .step-num {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: var(--border);
+    line-height: 1;
+    padding-top: 0.25rem;
+  }
+
+  .step h4 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .step p {
+    font-size: 0.95rem;
+    color: #555;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .price-card {
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem;
+    background: var(--card-bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+
+  .price-card.featured {
+    background: var(--black);
+    color: var(--off-white);
+    border-color: var(--black);
+  }
+
+  .price-tier {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .price-card.featured .price-tier { color: var(--accent-light); }
+
+  .price-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .price-card.featured .price-label { color: rgba(245,242,238,0.4); }
+
+  .price-amount {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 2.25rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .price-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+
+  .price-card.featured .price-desc { color: rgba(245,242,238,0.8); }
+
+  .price-includes {
+    list-style: none;
+    font-size: 0.875rem;
+    color: #555;
+  }
+
+  .price-card.featured .price-includes { color: rgba(245,242,238,0.7); }
+
+  .price-includes li {
+    padding: 0.35rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .price-includes li::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ABOUT */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    background: var(--warm-white);
+  }
+
+  .about-card {
+    background: var(--black);
+    color: var(--off-white);
+    padding: 3rem;
+    border-radius: 4px;
+  }
+
+  .about-card-name {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+
+  .about-card-title {
+    font-size: 0.875rem;
+    color: var(--accent-light);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .about-stat { margin-bottom: 1.25rem; }
+
+  .about-stat-num {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 2.25rem;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .about-stat-label {
+    font-size: 0.8rem;
+    color: rgba(245,242,238,0.5);
+    font-weight: 300;
+    margin-top: 0.2rem;
+  }
+
+  .about-meta {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.8rem;
+    color: rgba(245,242,238,0.4);
+    font-weight: 300;
+  }
+
+  .about-content p {
+    font-size: 1.05rem;
+    color: #444;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--accent);
+    color: white;
+    text-align: center;
+    padding: 7rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: 'AUDIT';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: clamp(8rem, 20vw, 20rem);
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.12);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .cta-section h2 {
+    color: white;
+    max-width: 600px;
+    margin: 0 auto 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section p {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 440px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-white {
+    display: inline-block;
+    background: white;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.9rem 2.25rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    color: rgba(245,242,238,0.4);
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  footer .logo { color: var(--off-white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .about { grid-template-columns: 1fr; gap: 3rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .step { grid-template-columns: 50px 1fr; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Friction<span>Lab</span></a>
+  <a href="#contact" class="cta-nav">Book a Free Call</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Digital Experience Audits</p>
+  <h1>We don't solve problems.<br><em>We seek them out.</em><br>First.</h1>
+  <p class="hero-sub">Most products don't fail because of bad ideas. They fail because of friction — small moments of confusion that add up to frustrated customers and lost revenue.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Book a Free 20-min Call</a>
+    <a href="#services" class="btn-secondary">See what's included ↓</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Experience Audit</span><span class="dot">✦</span>
+    <span>UX Review</span><span class="dot">✦</span>
+    <span>Journey Mapping</span><span class="dot">✦</span>
+    <span>Friction Analysis</span><span class="dot">✦</span>
+    <span>Conversion Optimization</span><span class="dot">✦</span>
+    <span>UX Teardowns</span><span class="dot">✦</span>
+    <span>Experience Audit</span><span class="dot">✦</span>
+    <span>UX Review</span><span class="dot">✦</span>
+    <span>Journey Mapping</span><span class="dot">✦</span>
+    <span>Friction Analysis</span><span class="dot">✦</span>
+    <span>Conversion Optimization</span><span class="dot">✦</span>
+    <span>UX Teardowns</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <p class="section-label">The Problem</p>
+  <h2>Friction is costing you more than you think.</h2>
+  <p class="problem-body">Abandoned onboardings. Confusing checkouts. Users who tried once and never came back. <strong>These aren't product problems. They're experience problems</strong> — and they're invisible to the people closest to them.</p>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background: var(--warm-white);">
+  <p class="section-label">What I Do</p>
+  <h2>A structured outside perspective on your product — before your users vote with their feet.</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <p class="service-num">01</p>
+      <h3>Digital Experience Audit</h3>
+      <p>A deep review of your product's key flows — onboarding, checkout, core features — through the eyes of a real user. I find exactly where people get lost, hesitate, or give up.</p>
+
+    </div>
+    <div class="service-card">
+      <p class="service-num">02</p>
+      <h3>Full Product Audit</h3>
+      <p>A comprehensive review of your entire digital product — every key flow, every critical touchpoint — to surface the friction patterns that are costing you conversions and retention.</p>
+
+    </div>
+    <div class="service-card">
+      <p class="service-num">03</p>
+      <h3>End-to-End Journey Audit</h3>
+      <p>A full map of how users move through your product from first touch to core value — identifying every drop-off, detour, and dead end along the way.</p>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <p class="section-label">How It Works</p>
+  <h2>Simple, focused, and built around your business.</h2>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <h4>Discovery & Research</h4>
+        <p>Before I visit or test anything, I study your product, reviews, customer feedback, and competitive landscape to build a clear hypothesis of where friction lives.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <h4>The Audit</h4>
+        <p>I experience your product the way a real user would — unbiased, methodical, and with 18+ years of pattern recognition behind every observation.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <h4>Analysis & Mapping</h4>
+        <p>I map the full customer journey, scoring every touchpoint on clarity, efficiency, and emotional impact. Friction points are ranked by severity and business cost.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <h4>Recommendations</h4>
+        <p>You get a prioritized action plan — quick wins and longer-term fixes — with concrete, specific recommendations. Not vague suggestions.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div>
+        <h4>Delivery & Walkthrough</h4>
+        <p>A clean, visual report plus a live presentation so nothing gets lost in translation. I walk your team through every finding and answer every question.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section style="background: var(--warm-white);">
+  <p class="section-label">Investment</p>
+  <h2>Straightforward pricing. No surprises.</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <p class="price-tier">Starter</p>
+      <p class="price-label">Starting at</p>
+      <p class="price-amount">$1,500</p>
+      <p class="price-desc">One focused flow or area. Ideal for early-stage teams who want fast, actionable insights on a specific problem.</p>
+      <ul class="price-includes">
+        <li>One key flow reviewed</li>
+        <li>Friction inventory with severity ratings</li>
+        <li>Prioritized recommendations</li>
+        <li>PDF findings report</li>
+        <li>30-min walkthrough call</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <p class="price-tier">Full Audit</p>
+      <p class="price-label">Starting at</p>
+      <p class="price-amount">$4,000</p>
+      <p class="price-desc">Complete product review. The most popular option for growing teams who need the full picture.</p>
+      <ul class="price-includes">
+        <li>Full product audit</li>
+        <li>Customer journey map</li>
+        <li>Complete friction inventory</li>
+        <li>Prioritized action plan</li>
+        <li>Visual report + live presentation</li>
+        <li>30-day follow-up check-in</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <p class="price-tier">Enterprise</p>
+      <p class="price-label">Starting at</p>
+      <p class="price-amount">$10,000</p>
+      <p class="price-desc">Complex products with multiple user types or flows. Includes competitive benchmarking and stakeholder interviews.</p>
+      <ul class="price-includes">
+        <li>Multi-flow or multi-location audit</li>
+        <li>Stakeholder interviews</li>
+        <li>Competitive benchmarking</li>
+        <li>Full journey mapping</li>
+        <li>Executive-ready report</li>
+        <li>Ongoing advisory option</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-visual">
+    <div class="about-card">
+      <p class="about-card-name">Vu</p>
+      <p class="about-card-title">Principal Experience Designer</p>
+      <div class="about-stat">
+        <p class="about-stat-num">18+</p>
+        <p class="about-stat-label">Years in Experience Design</p>
+      </div>
+      <div class="about-stat">
+        <p class="about-stat-num">∞</p>
+        <p class="about-stat-label">Friction points identified</p>
+      </div>
+      <p class="about-meta">Currently: Principal Experience Designer at Informed XP</p>
+    </div>
+  </div>
+  <div class="about-content">
+    <p class="section-label">About</p>
+    <h2>I've spent 18 years making experiences work. Now I help others do the same.</h2>
+    <p>I'm Vu, a Principal Experience Designer with over 18 years working at the intersection of people, behavior, and design. I've spent my career understanding why people do what they do — and why they don't do what businesses expect them to.</p>
+    <p>Most consultants look at analytics and tell you what's broken. I go deeper — mapping the actual experience your users have, step by step, and finding the friction that data alone can't explain.</p>
+    <p>No jargon. No bloated reports. Just honest, specific, actionable insights from someone who has been doing this for a long time.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2>Ready to find out where your experience is breaking down?</h2>
+  <p>Book a free 20-minute call. No pitch, no pressure — just a conversation about what you're dealing with and whether an audit makes sense.</p>
+  <a href="/cdn-cgi/l/email-protection#f39b969f9f9cb395819a90879a9c9d9f9291dd909c9e" class="btn-white">Book a Free Call →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">Friction<span>Lab</span></a>
+  <p>© 2026 Friction Lab. Experience a
